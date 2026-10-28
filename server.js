@@ -6,6 +6,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const expressRateLimit = require("express-rate-limit");
+const bcrypt = require("bcryptjs");
 
 //Create Express app
 const app = express();
@@ -29,8 +30,12 @@ app.get("/", (req, res) => {
 });
 
 //users array (add one moderator user with pre-hashed password)
+const users = [];
 //recipes array (start empty)
+const recipes = [];
 //ID counter variables
+let nextUserId = 1;
+let nextRecipeId = 1;
 
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/recipes", recipeRoutes);

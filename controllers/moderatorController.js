@@ -1,22 +1,45 @@
-//PUT /recipes/:id/feature:
+const feature = async (req, res, next) => {
+  try {
+    // Find recipe by ID
+    const recipeId = Number(req.params.id);
 
-//Apply authenticateToken AND requireModerator
-//Find recipe by ID
-//Set isFeatured = true
-//Return updated recipe
+    const recipe = recipes.find((recipe) => {
+      return recipe.id === recipeId;
+    });
 
-//PUT /recipes/:id/hide:
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
 
-//Apply both middlewares
-//Find recipe
-//Set isHidden = true
-//Return updated recipe
+    // Set isFeatured = true
+    recipe.isFeatured = true;
+    // Return updated recipe
+    return res.status(200).json(recipe);
+  } catch (error) {
+    return next(error);
+  }
+};
 
-//Test:
+const hide = async (req, res, next) => {
+  try {
+    // Find recipe by ID
+    const recipeId = Number(req.params.id);
 
-//Login as moderator
-//Feature a recipe - should work
-//Hide a recipe - should work
-//Login as regular user
-//Try to feature recipe - should return 403
-//Verify hidden recipes don't show in public GET /recipes
+    const recipe = recipes.find((recipe) => {
+      return recipe.id === recipeId;
+    });
+
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    // Set isHidden = true
+    recipe.isHidden = true;
+    // Return updated recipe
+    return res.status(200).json(recipe);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = { feature, hide };

@@ -50,7 +50,7 @@ const register = async (req, res, next) => {
     userId: user.id,
     username: user.username,
     email: user.email,
-    role: user.role.
+    role: user.role
     };
   
   const token = jwt.sign(payload, JWT_SECRET, {
@@ -69,7 +69,6 @@ const register = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-});
 };
 
 
@@ -125,7 +124,6 @@ const login = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-});
 };
 
 //GET /me (protected):

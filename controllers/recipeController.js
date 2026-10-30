@@ -1,49 +1,123 @@
 //GET / (public recipes):
+const getRecipes = (req, res, next) => {
+  try {
+    //Filter recipes where isPublic === true AND isHidden === false
+    const publicRecipes = recipes.filter(recipe => {
+      return recipe.isPublic === true && recipe.isHidden === false;
+    });
+  
+    //Return public, non-hidden recipes only
+    return res.status(200).json(publicRecipes);
+  } catch (error) {
+    return next(error);
+  }
+}
 
-//Filter recipes where isPublic === true AND isHidden === false
-//Return public, non-hidden recipes only
 
 //GET /:id (single recipe):
+const getRecipeById = (req, res, next) => {
+  try {
+    //Find recipe by ID
+    const recipeId = Number(req.params.id);
 
-//Find recipe by ID
-//If recipe.isPublic === false, check if requester is owner
-//If recipe.isHidden === true, only owner or moderator can view
-//Return 403 if not authorized to view
-//Return recipe
+    const recipe = recipes.find(recipe => {
+      return recipe.id === recipeId;
+    })
+
+    //If recipe.isPublic === false, check if requester is owner
+    //if (!recipe.isPublic) {
+    //  if (user.role)
+    //}
+    //If recipe.isHidden === true, only owner or moderator can view
+    //Return 403 if not authorized to view
+    //Return recipe
+  } catch (error) {
+    return next(error);
+  }
+}
+
 
 //POST / (create):
-
-//Apply authenticateToken middleware
-//Validate title, ingredients, instructions, cookTime
-//Validate ingredients is non-empty array
-//Validate instructions is non-empty array
-//Create recipe with unique ID
-//Set createdBy = req.user.userId
-//Set isPublic = true (default)
-//Add to recipes array
-//Return created recipe
+const createRecipe = (req, res, next) => {
+  try {
+    const title = req.body.title;
+    const ingredients = req.body.ingredients;
+    const instructions = req.body.instructions;
+    const cookTime = req.body.cookTime;
+    
+    //Validate title, ingredients, instructions, cookTime
+    if (!title || !ingredients || !instructions || !cookTime) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    
+    //Validate ingredients is non-empty array
+    if (ingredients.length > 0) {
+      return res.status(400).json({ message: "Please enter ingredients" });
+    } 
+    
+    //Validate instructions is non-empty array
+    if (instructions.length > 0) {
+      return res.status(400).json({ message: "Please enter instructions" });
+    }
+    
+    //Create recipe with unique ID
+    //Set createdBy = req.user.userId
+    //Set isPublic = true (default)
+    const newRecipe = {
+      id: nextRecipeId,
+      createdBy: req.user.userId,
+      isPublic: true,
+      title: title,
+      ingredients: ingredients,
+      instructions: instructions,
+      cookTime: cookTime,
+      isHidden: false,
+    }
+    //Add to recipes array
+    recipes.push(newRecipe);
+    //Return created recipe
+    return res.status(200).json(newRecipe);
+  } catch (error) {
+    return next(error);
+  }
+}
 
 //GET /my-recipes (user's own):
+const getOwnRecipes = (req, res, next) => {
+  try {
+    //Filter recipes where createdBy === req.user.userId
+    //Return ALL user's recipes (including private)
+  } catch (error) {
+    return next(error);
+  }
+}
 
-//Apply authenticateToken middleware
-//Filter recipes where createdBy === req.user.userId
-//Return ALL user's recipes (including private)
 
 //PUT /:id (update):
+const updateRecipe = (req, res, next) => {
+  try {
+    //Find recipe by ID
+    //Verify createdBy === req.user.userId (403 if not owner)
+    //Update allowed fields
+    //Return updated recipe
+  } catch (error) {
+    return next(error);
+  }
+}
 
-//Apply authenticateToken middleware
-//Find recipe by ID
-//Verify createdBy === req.user.userId (403 if not owner)
-//Update allowed fields
-//Return updated recipe
 
 //DELETE /:id (delete):
+const deleteRecipe = (req, res, next) => {
+  try {
+    //Find recipe
+    //Verify ownership
+    //Remove from array
+    //Return success
+  } catch (error) {
+    return next(error);
+  }
+}
 
-//Apply authenticateToken middleware
-//Find recipe
-//Verify ownership
-//Remove from array
-//Return success
 //Test:
 
 //Create recipe as user A

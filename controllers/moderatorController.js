@@ -1,5 +1,7 @@
 const feature = async (req, res, next) => {
   try {
+    const recipes = req.app.locals.recipes;
+
     // Find recipe by ID
     const recipeId = Number(req.params.id);
 
@@ -22,6 +24,8 @@ const feature = async (req, res, next) => {
 
 const hide = async (req, res, next) => {
   try {
+    const recipes = req.app.locals.recipes;
+    
     // Find recipe by ID
     const recipeId = Number(req.params.id);
 

@@ -8,6 +8,11 @@ const cors = require("cors");
 const expressRateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
 
+//routes
+const authRoutes = require("./routes/authRoutes");
+const recipeRoutes = require("./routes/recipeRoutes");
+const moderatorRoutes = require("./routes/moderatorRoutes");
+
 //Create Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,6 +41,27 @@ const recipes = [];
 //ID counter variables
 let nextUserId = 1;
 let nextRecipeId = 1;
+
+//need a way to access arrays and counters across files
+app.locals.users = users;
+app.locals.recipes = recipes;
+
+app.locals.getNextUserId = () => nextUserId++;
+app.locals.getNextRecipeId = () => nextRecipeId++;
+
+//Create moderator user
+const hashedPassword = bcrypt.hashSync(process.env.MODERATOR_PASSWORD, 10);
+
+const moderator = {
+  id: nextUserId++,
+  username: "moderator",
+  email: "moderator@example.com",
+  hashedPassword: hashedPassword,
+  role: "moderator",
+  createdAt: new Date(),
+};
+
+users.push(moderator);
 
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/recipes", recipeRoutes);

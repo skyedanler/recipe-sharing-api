@@ -10,9 +10,9 @@ const { authenticateToken } = require("../middleware/auth");
 //PUT /:id (update):
 //DELETE /:id (delete):
 router.get("/", recipeController.getRecipes);
+router.get("/my-recipes", authenticateToken, recipeController.getOwnRecipes);
 router.get("/:id", recipeController.getRecipeById);
 router.post("/", authenticateToken, recipeController.createRecipe);
-router.get("/my-recipes", authenticateToken, recipeController.getOwnRecipes);
 router.put("/:id/", authenticateToken, recipeController.updateRecipe);
 router.delete("/:id/", authenticateToken, recipeController.deleteRecipe);
 
